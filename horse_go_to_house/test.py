@@ -51,11 +51,11 @@ def main():
 	pygame.init()
 
 	screen = pygame.display.set_mode((WIDTH, HEIGHT))
-	music = pygame.mixer.Sound("se/horse.wav")
+	pygame.mixer.music.load("se/horse.wav")
 	correct = pygame.mixer.Sound("se/correct.wav")
 	correct.set_volume(0.2)
 	fail = pygame.mixer.Sound("se/fail.wav")
-	music.play(loops=0)
+	pygame.mixer.music.play()
 	
 	font = pygame.font.Font(None, 30) #フォントの設定
 
@@ -66,11 +66,11 @@ def main():
 				index += 1
 				if event.key == K_SPACE:	
 					state = 'jump'
-					time = music.get_length()	#音楽の再生時間を取得
+					time = pygame.mixer.music.get_pos()/1000	#音楽の再生時間を取得
 					print(time)	#手動入力したtimeを出力
 					fail.play()
 				elif event.key == K_f or event.key == K_j:
-					time = music.get_length()	#音楽の再生時間を取得
+					time = pygame.mixer.music.get_pos()/1000	#音楽の再生時間を取得
 					print(time)	#手動入力したtimeを出力
 					correct.play()
 					if state == 'run1':
@@ -94,26 +94,29 @@ def main():
 				jumpt = 0
 				jumpy = 0
 				state = 'run1'
-#左上テキストの表示
+
+		#左上テキストの表示
 		text = font.render(str(time), True, (0,0,0)) #テキストの設定 str(time-1)	
-		screen.blit(text, [0,0]) #テキストの表示
-#判定の表示
-		'''
-		if abs(float(TIMING[index])-time) < 0.1:
+		screen.blit(text, [0,0]) #テキストの表示78ui89i
+		
+		#判定の表示
+		if abs(float(TIMING[index])-time) < 0.08:
 			judgement = font.render("perfect!", True, (0,0,0))			
 		elif abs(float(TIMING[index])-time) > 0.1:
 			judgement = font.render("bad", True, (0,0,0))
 		screen.blit(judgement, [200,220])
-		'''
+		
+		#how fast hardles come
 		x -= 720/FPS 
 		for i in range(3):
 			DISPLAYSURF.blit(IMAGEDICT['red'],(x+block[i],0))
+		'''
 		pygame.draw.line(screen, (255,255,255), (100,0), (100,500))
 		pygame.draw.line(screen, (255,255,255), (200,0), (200,500))
 		pygame.draw.line(screen, (255,255,255), (300,0), (300,500))
 		pygame.draw.line(screen, (255,255,255), (400,0), (400,500))
 		pygame.draw.line(screen, (255,255,255), (500,0), (500,500))
-
+		'''
 		pygame.display.update()
 		fpsClock.tick_busy_loop(FPS)
 
