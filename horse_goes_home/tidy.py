@@ -119,7 +119,7 @@ def main():
 	    		'bad': pygame.image.load('pic/fail.png'),
 	    		'cloud': pygame.image.load('pic/cloud.png'),
 	    		'bird': pygame.image.load('pic/bird.png'),
-	    		'house': pygame.image.load('pic/house.png'),
+	    		'home': pygame.image.load('pic/house.png'),
 	    		}
 
 	pygame.mixer.music.load("se/horse.wav")
@@ -127,8 +127,9 @@ def main():
 	CORRECT.set_volume(0.2)
 	JUMP = pygame.mixer.Sound("se/Motion-pop15-1.wav")
 	FAIL = pygame.mixer.Sound("se/fail.wav")
+	FAIL.set_volume(0.5)
 	MISS = pygame.mixer.Sound("se/match4.wav")
-	MISS.set_volume(0.3)
+	MISS.set_volume(0.2)
 	screen = pygame.display.set_mode((WIDTH, HEIGHT))
 	font = pygame.font.Font(None, 30)
 	BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
@@ -198,9 +199,9 @@ def runGame():
 		image,jump = drawCharacter(image,jump)
 		
 		#プレイ終了
-		if pygame.mixer.music.get_pos()/1000 > 54.00:
-			for result in zip(TIMING,INPUT,DIST,JUDGE):
-				print(result)
+		if pygame.mixer.music.get_pos()/1000 > 51.00:
+			#for result in zip(TIMING,INPUT,DIST,JUDGE):
+			#	print(result)
 			return JUDGE
 		#prepare for the next frame
 		pygame.display.update()
@@ -221,13 +222,35 @@ def calculater(JUDGE):
 			score += 3*0.1
 		elif str == 'Miss':
 			score += -3*0.1
-
 	score = round((score/(len(JUDGE)*3))*100,3)
 	return score
 
-def showEndEvent(JUDGE):
-	score = calculater(JUDGE)
-	print(score)
+def showEndEvent(RESULLT):
+	image = IMAGEDICT['walkr']
+	
+	i = 0
+	homex = WIDTH
+	while True:
+		if i % 30 == 0:
+			if image == IMAGEDICT['walkl']:
+				image = IMAGEDICT['walkr']
+			else: image = IMAGEDICT['walkl']
+		if i > 30*5:
+			break
+		if homex > WIDTH/2:
+			homex -= 3
+		i += 1
+		DISPLAYSURF.blit(IMAGEDICT['back'],(0,0))
+		DISPLAYSURF.blit(IMAGEDICT['home'],(homex,0))
+		DISPLAYSURF.blit(image,(0,0))
+		pygame.display.update()
+		FPSCLOCK.tick(FPS)
+
+	DISPLAYSURF.blit(IMAGEDICT['back'],(0,0))
+	DISPLAYSURF.blit(IMAGEDICT['home'],(homex,0))
+	DISPLAYSURF.blit(IMAGEDICT['stop'],(0,0))
+	score = calculater(RESULT)
+	pygame.event.clear() #次のcheckForKeyPressのため余分なキー入力を消しておく
 	while True:
 		screen.blit(font.render(str(score), True, (0,0,0)), [100,100])
 		if checkForKeyPress():
@@ -290,7 +313,7 @@ def missed(J,time,INPUT,JUDGE,DIST,image,judgement):
 			DIST[J] = None
 			INPUT[J] = None
 			image = IMAGEDICT['bad']
-			MISS.play()
+			#MISS.play()
 			J += 1
 	return J,INPUT,JUDGE,DIST,image,judgement
 
@@ -373,7 +396,7 @@ def judge(J,time,INPUT,JUDGE,DIST,image,judgement,jump):
 	return J,INPUT,JUDGE,DIST,image,judgement
 
 def drawCharacter(image,jump):
-	JUMPRATE = 10
+	JUMPRATE = 8
 	JUMPHEIGHT = 100
 	if jump['jumping']: #ジャンプしている
 		jump['y'] = math.sin((math.pi / float(JUMPRATE)) * jump['t']) * JUMPHEIGHT
