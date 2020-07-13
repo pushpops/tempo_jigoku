@@ -4,8 +4,8 @@ Motion *
 https://otologic.jp/free/se/quiz01.html
 Quiz-Results01-2.mp3
 
-https://dova-s.jp/bgm/play13096.html
-13096.mp3
+https://dova-s.jp/bgm/play1840.html
+1840.mp3
 
 https://otologic.jp/free/se/shortbridge01.html
 Shortbrige02-1.mp3
